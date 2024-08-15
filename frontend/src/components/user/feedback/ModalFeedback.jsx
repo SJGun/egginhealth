@@ -12,8 +12,9 @@ const StyledModal = styled(Modal)`
   background: #f9f9f9;
   border-radius: 12px;
   padding: 20px;
-  width: 400px;
+  width: 360px;
   margin: auto;
+  margin-top: 40px;
 `;
 
 const Title = styled.h2`
