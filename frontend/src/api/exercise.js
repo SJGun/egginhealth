@@ -118,14 +118,11 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
-  const byteArray = new Uint8Array(
-    record.split("").map((char) => char.charCodeAt(0))
-  );
-  const blob = new Blob([byteArray], { type: "video/mp4" });
   const formData = new FormData();
+  console.log(record.blob());
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
-  formData.append(`record`, blob);
+  formData.append(`record`, record.blob());
   formData.append(`createdAt`, createdAt);
   const res = await axios.post(`${BASE_URL}/feedback`, formData, {
     headers: {
