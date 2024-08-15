@@ -5,7 +5,7 @@ import { uploadOCR } from '../../../api/inbody';
 import { getInbodyParsingResult } from '../../../hooks/inbodyParsing';
 import { MdOutlineInsertPhoto } from "react-icons/md";
 import eggImg from '../../../assets/egg.gif'; // GIF 파일 경로
-
+import { useStore } from '../../../store/store';
 const UploadButton = styled.label`
   background-color: #FFD66B;
   border: none;
@@ -54,18 +54,21 @@ const LoadingText = styled.p`
 
 const ImageUpload = ({ setInbodyData }) => {
   const [loading, setLoading] = useState(false); // 로딩 상태를 위한 상태 변수
-
+  const userId = useStore((state)=>state.userId)
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setLoading(true); // 파일 선택 시 로딩 상태 활성화
       try {
-        const ocrResult = await uploadOCR(file);
+        // const ocrResult = await uploadOCR(file);
 
-        const formatData = await getInbodyParsingResult(ocrResult);
+        // const formatData = await getInbodyParsingResult(ocrResult);
+        const formatData = 
         formatData.imageFile = file;
         formatData.height = '0'; 
+        formatData.memberId=userId
 
+        
         await setInbodyData(formatData);
       } catch (error) {
         console.error('Error uploading photo:', error);

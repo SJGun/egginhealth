@@ -6,6 +6,7 @@ import ButtonCamera from '../../../components/common/button/ButtonCamera';
 import PhotoCaptureModal from '../../../components/common/modal/ModalPhotoCapture';
 import ImageUpload from './InbodyImgUpload'
 import { uploadInbodyData } from '../../../api/inbody';
+import { useStore } from '../../../store/store';
 
 const StyledModal = styled(Modal)`
   display: flex;
@@ -89,10 +90,10 @@ const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
     fatPercent: '',
     compositionScore: '',
     height: '',
-    imageFile: null,
-    memberId: null,
+    imageFile: '',
+    memberId: '',
   });
-
+  const userId = useStore((state)=>state.userId)
   const openPhotoModal = () => {
     setPhotoModalIsOpen(true);
   };
@@ -125,7 +126,11 @@ const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
   ];
 
   const updateData = async () => {
+    inbodyData.memberId = userId
+    inbodyData.height = 0
     await uploadInbodyData(inbodyData);
+
+    
     await onRequestClose();
     await fetchData();
   };
