@@ -85,7 +85,7 @@ export const uploadOCR = async (imageFile) => {
   console.log('인바디 파싱중');
   
   try {
-    const response = await axios.post('https://i11c203.p.ssafy.io/clova', formData, {
+    const response = await axios.post(OCR_URL,formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'X-OCR-SECRET': secret_key
