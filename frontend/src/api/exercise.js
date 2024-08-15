@@ -110,7 +110,8 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  const file = new File([res.data], "video.mp4", { type: "video/mp4" });
+  const blob = new Blob([res.data], { type: "application/octet-stream" });
+  const file = new File([blob], "video.mp4", { type: "video/mp4" });
   return file;
 };
 
