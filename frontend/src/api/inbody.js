@@ -84,7 +84,7 @@ export const uploadOCR = async (imageFile) => {
   formData.append('file', imageFile);
 
   try {
-    const response = await axios.post(OCR_URL, formData, {
+    const response = await axios.post('https://i11c203.p.ssafy.io/clova', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'X-OCR-SECRET': secret_key
