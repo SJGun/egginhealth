@@ -88,6 +88,7 @@ const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
     fat: '',
     bmi: '',
     fatPercent: '',
+    fatPercentage: '',
     compositionScore: '',
     height: '',
     imageFile: '',

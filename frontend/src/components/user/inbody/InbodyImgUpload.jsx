@@ -1,11 +1,12 @@
 // components/common/ImageUpload.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { uploadOCR } from '../../../api/inbody';
 import { getInbodyParsingResult } from '../../../hooks/inbodyParsing';
 import { MdOutlineInsertPhoto } from "react-icons/md";
-import eggImg from '../../../assets/egg.gif'; // GIF 파일 경로
+import eggImg from '../../../assets/egg.gif'; 
 import { useStore } from '../../../store/store';
+import { uploadOCR } from '../../../api/inbody';
+
 const UploadButton = styled.label`
   background-color: #FFD66B;
   border: none;
@@ -53,27 +54,34 @@ const LoadingText = styled.p`
 `;
 
 const ImageUpload = ({ setInbodyData }) => {
-  const [loading, setLoading] = useState(false); // 로딩 상태를 위한 상태 변수
-  const userId = useStore((state)=>state.userId)
+  const [loading, setLoading] = useState(false); 
+  const userId = useStore((state) => state.userId);
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLoading(true); // 파일 선택 시 로딩 상태 활성화
+      setLoading(true); 
       try {
-        // const ocrResult = await uploadOCR(file);
-
-        // const formatData = await getInbodyParsingResult(ocrResult);
-        const formatData = 
+        let formatData;
+        const ocrResult = await uploadOCR(file);      
+        try {
+          formatData = await getInbodyParsingResult(ocrResult);
+        } catch (error) {
+          console.error('getInbodyParsingResult에서 오류 발생:', error);
+          formatData = {
+            imageFile: file,
+            height: '0',
+            memberId: userId,
+          };
+        }
         formatData.imageFile = file;
-        formatData.height = '0'; 
-        formatData.memberId=userId
-
+        formatData.memberId = userId;
         
-        await setInbodyData(formatData);
+        await setInbodyData(formatData); 
       } catch (error) {
         console.error('Error uploading photo:', error);
       } finally {
-        setLoading(false); // 데이터 처리가 끝나면 로딩 상태 비활성화
+        setLoading(false); 
       }
     }
   };
