@@ -93,8 +93,7 @@ export const uploadOCR = async (imageFile) => {
         'X-OCR-SECRET': secret_key
       },
     });
-    console.log('인바디 파싱성공');
-    
+    console.log('인바디 파싱성공', response.data);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error('인바디 파싱실패','알 수 없는  발생:',error);
