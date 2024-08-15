@@ -63,7 +63,9 @@ const ImageUpload = ({ setInbodyData }) => {
       setLoading(true); 
       try {
         let formatData;
-        const ocrResult = await uploadOCR(file);      
+        const ocrResult = await uploadOCR(file);
+        console.log(ocrResult);
+        
         try {
           formatData = await getInbodyParsingResult(ocrResult);
         } catch (error) {
