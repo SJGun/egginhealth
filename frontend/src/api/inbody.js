@@ -92,6 +92,6 @@ export const uploadOCR = async (imageFile) => {
     });
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : new Error('알 수 없는 오류 발생:',error);
+    throw error.response ? error.response.data : new Error(error,'알 수 없는 오류 발생:',error);
   }
 };

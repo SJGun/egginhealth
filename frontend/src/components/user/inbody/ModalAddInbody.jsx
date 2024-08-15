@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+// components/common/modal/ModalAddInbody.js
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import ButtonCamera from '../../../components/common/button/ButtonCamera';
 import PhotoCaptureModal from '../../../components/common/modal/ModalPhotoCapture';
+import ImageUpload from './InbodyImgUpload'
 import { uploadInbodyData } from '../../../api/inbody';
 
 const StyledModal = styled(Modal)`
@@ -54,7 +56,6 @@ const InputField = styled.input`
   }
 `;
 
-
 const UnitLabel = styled.span`
   flex: 1;
   text-align: right;
@@ -74,9 +75,11 @@ const CameraButtonWrapper = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+  display: flex;
+  gap: 3px; /* 버튼 간격 조절 */
 `;
 
-const ModalAddInbody = ({ isOpen, onRequestClose,fetchData }) => {
+const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
   const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false);
   const [inbodyData, setInbodyData] = useState({
     weight: '',
@@ -105,6 +108,13 @@ const ModalAddInbody = ({ isOpen, onRequestClose,fetchData }) => {
     });
   };
 
+  const handleFileSelect = (file) => {
+    setInbodyData({
+      ...inbodyData,
+      imageFile: file
+    });
+  };
+
   const inbodyBoxContent = [
     { key: 'weight', label: '체중', unit: 'kg' },
     { key: 'muscle', label: '골격근량', unit: 'kg' },
@@ -114,10 +124,10 @@ const ModalAddInbody = ({ isOpen, onRequestClose,fetchData }) => {
     { key: 'compositionScore', label: '종합점수', unit: '점' },
   ];
 
-  const updateData = async() => {
+  const updateData = async () => {
     await uploadInbodyData(inbodyData);
     await onRequestClose();
-    await fetchData()
+    await fetchData();
   };
 
   return (
@@ -126,6 +136,7 @@ const ModalAddInbody = ({ isOpen, onRequestClose,fetchData }) => {
         <ModalContent>
           <CameraButtonWrapper>
             <ButtonCamera onClick={openPhotoModal} />
+            <ImageUpload onFileSelect={handleFileSelect} setInbodyData={setInbodyData} />
           </CameraButtonWrapper>
           <h2>검사지 등록하기</h2>
           {inbodyBoxContent.map((item, index) => (
