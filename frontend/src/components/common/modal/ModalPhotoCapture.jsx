@@ -148,17 +148,15 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
   };
 
   const uploadPhoto = async (dataUrl) => {
-    setLoading(true); // 업로드 시작 시 로딩 상태 활성화
+    setLoading(true); 
     try {
       const file = dataURLtoFile(dataUrl, 'captured-photo.png');
-      const ocrResult = await uploadOCR(file);
-      console.log(ocrResult);
-      
+      const ocrResult = await uploadOCR(file);      
       const formatData = getInbodyParsingResult(ocrResult);
       formatData.memberId = userId;
       formatData.imageFile = file;
       formatData.height = '0';
-
+      
       await setInbodyData(formatData);
       closePhotoModal();
     } catch (error) {
