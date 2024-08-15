@@ -106,6 +106,9 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     : -1;
 
   if (mode === -1) return record;
+
+  console.log(mode);
+
   formData.append(`mode`, mode);
   formData.append(`file`, record);
   const res = await axios.post(`${AI_BASE_URL}/feedback`, formData, {
@@ -114,15 +117,17 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
+  console.log(res);
   return res.data;
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
   const formData = new FormData();
-  console.log(record.blob());
+  console.log(typeof record);
+  console.log(record);
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
-  formData.append(`record`, record.blob());
+  formData.append(`record`, record);
   formData.append(`createdAt`, createdAt);
   const res = await axios.post(`${BASE_URL}/feedback`, formData, {
     headers: {
