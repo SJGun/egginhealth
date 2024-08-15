@@ -33,6 +33,8 @@ const ModalContent = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  justify-content: flex-start; 
+
 `;
 
 const VideoContainer = styled.div`
@@ -61,11 +63,14 @@ const ResultImage = styled.img`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  bottom: 20px;  /* 화면 하단에 버튼이 고정되도록 설정 */
+  bottom: 20px;
   display: flex;
   width: 100%;
+  top: 530px;
   justify-content: center;
   gap: 10px;
+  margin-top: auto; 
+  margin-bottom: 280px; 
 `;
 
 const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
@@ -87,11 +92,7 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
 
   const startCamera = async () => {
     try {
-      const userStream = await navigator.mediaDevices.getUserMedia({ 
-        video: {
-          facingMode: { ideal: "environment" } // 후면 카메라 사용
-        }
-      });
+      const userStream = await navigator.mediaDevices.getUserMedia({ video: true });
       setStream(userStream);
       if (videoRef.current) {
         videoRef.current.srcObject = userStream;
@@ -128,11 +129,13 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
     try {
       const file = dataURLtoFile(dataUrl, 'captured-photo.png');
       const ocrResult = await uploadOCR(file);
+      console.log(ocrResult);
+      
       const formatData = getInbodyParsingResult(ocrResult);
       formatData.memberId = userId;
       formatData.imageFile = file;
       formatData.height = '0';
-      console.log(formatData);
+
 
       setInbodyData(formatData);
       closePhotoModal();

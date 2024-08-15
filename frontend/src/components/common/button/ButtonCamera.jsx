@@ -4,8 +4,8 @@ import CameraBtn from '../../../assets/camerabutton.png';
 
 const StyledButton = styled.img`
   cursor: pointer;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
 `;
 
 const ButtonCamera = ({ onClick }) => {
