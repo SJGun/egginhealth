@@ -7,7 +7,6 @@ const RenderDaysForTrainer = ({ year, month, onDateChange,userId }) => {
     const today =new Date(now.getTime()+ kstOffset);
     const [selectedDay, setSelectedDay] = useState(today.getDate());
     const [memDate, setMemDate] = useState([]);
-
     const getDaysInMonth = (year, month) => {
         return new Date(year, month + 1, 0).getDate();
     };

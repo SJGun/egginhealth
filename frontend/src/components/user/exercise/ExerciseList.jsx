@@ -69,16 +69,10 @@ const ExerciseList = ({
   fetchExData,
   setExData
 }) => {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
-  const openAddModal = () => setIsAddModalOpen(true);
-  
-  const closeAddModal = () => {
-    setIsAddModalOpen(false);
-    setSelectedExercise(null); // 초기화
-  };
+
   
   const openActionModal = (exercise) => {
     setSelectedExercise(exercise);
@@ -120,24 +114,11 @@ const ExerciseList = ({
     },
   ];
 
-  const today = new Date().toISOString().split("T")[0];
 
   return (
     <div>
       {selectedDate && exData && exData.sets && exData.sets.length > 0 ? (
         <div>
-      {selectedDate >= today && userLoginData.type === "TRAINER" ? (
-            <AddButton onClick={openAddModal}>+</AddButton>
-          ) : null}
-          <AddExerciseModal
-            isOpen={isAddModalOpen}
-            onClose={closeAddModal}
-            selectedDate={selectedDate}
-            userData={userData}
-            setId={selectedExercise?.setId}
-            fetchExData={fetchExData}
-            setExData={setExData}
-          />
           {exData.sets
             .filter((set) => set.time > 0)
             .map((set, index) => (

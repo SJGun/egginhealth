@@ -10,7 +10,8 @@ import {
   MiniContainer,
   MiniPointer,
   PageContainer,
-  MiniPointerContainer
+  MiniPointerContainer,
+  AddButton
 } from "../../components/common/StyledComponents";
 import { useNavigate } from "react-router-dom";
 import RegisterButtonContainer from "../../components/common/button/RegisterButtonContainer"; // 수정 버튼
@@ -23,6 +24,8 @@ import NoImg from "../../components/user/Noimage";
 import ModalDeleteExImg from "../../components/user/exercise/ModalDeleteExImg";
 import styled from "styled-components";
 import ButtonDelete from '../../components/common/button/ButtonDelete';
+
+
 const FeedbackContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -30,6 +33,10 @@ const FeedbackContainer = styled.div`
 
 const Block = styled.div`
   height: 50px;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
 `;
 
 const Exercise = () => {
@@ -44,7 +51,16 @@ const Exercise = () => {
   const userType = useStore((set) => set.userType);
   const userLoginId = useStore((set) => set.userId);
   const userLoginData = useStore((set) => set.userInfo);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState(null); 
 
+  
+  const openAddModal = () => setIsAddModalOpen(true);
+  
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+    setSelectedExercise(null); // 초기화
+  };
   const getKoreanISOString = () => {
     const now = new Date();
     const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
@@ -58,7 +74,7 @@ const Exercise = () => {
       try {
         const year = new Date(selectedDate).getFullYear();
         const month = String(new Date(selectedDate).getMonth() + 1).padStart(2, '0'); // 0부터 시작하므로 +1
-        const day = String(new Date(selectedDate).getDate()).padStart(2, '0'); // 일자 포맷 맞추기
+        const day = String(new Date(selectedDate).getDate()).padStart(2, '0')// 일자 포맷 맞추기
         
         const data = await getExercise(userData.id, year, month, day);
         setExData(data);        
@@ -92,6 +108,7 @@ const Exercise = () => {
   const handleFeedbackClick = () => {
     navigate("/userfeedback");
   };
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <PageContainer>
@@ -116,7 +133,19 @@ const Exercise = () => {
         )}
           <MiniPointerContainer>
             <MiniPointer onClick={handleFeedbackClick}>피드백 목록</MiniPointer>
+            {selectedDate >= today && userLoginData.type === "TRAINER" ? (
+            <AddButton onClick={openAddModal}>+</AddButton>
+          ) : null}
           </MiniPointerContainer>
+          <AddExerciseModal
+            isOpen={isAddModalOpen}
+            onClose={closeAddModal}
+            selectedDate={selectedDate}
+            userData={userData}
+            setId={selectedExercise?.setId}
+            fetchExData={fetchExData}
+            setExData={setExData}
+          />
         <ExerciseList
           selectedDate={selectedDate}
           exData={exData}
@@ -181,7 +210,4 @@ const Exercise = () => {
 
 export default Exercise;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
+
