@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import Arrow from "../../assets/static/Property_Arrow.png";
-import { useStore } from '../../store/store.js'
+import { useStore, useUserInfoStore } from '../../store/store.js'
 import { userInfo } from "../../api/main";
 import BoxMain from '../user/main/BoxMain.jsx'
 import profile from '../../assets/profile.png'
@@ -17,6 +17,8 @@ const ChatComponent = ({ participantName, roomName, receiver }) => {
     const messagesEndRef = useRef(null); // 스크롤 조정을 위한 ref 추가
     const userName = useStore(state => state.userInfo)
     const [userNameTr,setuserNameTr] = useState('')
+    const userId = useStore((state)=>state.userId)
+
 
     useEffect(()=>{
         const fetchData = async ()=>{

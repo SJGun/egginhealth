@@ -67,12 +67,11 @@ const ExerciseList = ({
   userLoginData,
   userData,
   fetchExData,
-  setExData
+  setExData,
+  openAddModal
 }) => {
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
-
-
   
   const openActionModal = (exercise) => {
     setSelectedExercise(exercise);
@@ -114,6 +113,7 @@ const ExerciseList = ({
     },
   ];
 
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <div>
