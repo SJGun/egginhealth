@@ -120,6 +120,11 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
   console.log(res);
   return res.data;
 };
+const unicodeToByteArray = async (unicodeString) => {
+  const encoder = new TextEncoder();
+  const byteArray = encoder.encode(unicodeString);
+  return byteArray;
+};
 
 const hexStringToFile = async (hexString, fileName, mimeType) => {
   const bytes = [];
@@ -134,8 +139,12 @@ const hexStringToFile = async (hexString, fileName, mimeType) => {
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
-  const data = await hexStringToFile(record, "video.mp4", "video/mp4");
-  console.log(data);
+  const byteArray = await unicodeToByteArray(record);
+  const hexString = Array.from(byteArray)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  const data = await hexStringToFile(hexString, "video.mp4", "video/mp4");
   const formData = new FormData();
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
