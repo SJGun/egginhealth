@@ -1,8 +1,10 @@
 package com.egginhealth.controller;
 
 
+import com.egginhealth.data.dto.OcrDto;
 import com.egginhealth.data.dto.exercise.*;
 import com.egginhealth.service.ExerciseService;
+import com.egginhealth.service.OcrService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.io.IOException;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
+    private final OcrService ocrService;
 
     @GetMapping("/{uid}")
     public ResponseEntity<ExerciseDto> getExercise(@PathVariable("uid") int uid, @RequestParam int year, @RequestParam int month, @RequestParam int day) {
@@ -56,5 +59,12 @@ public class ExerciseController {
     public ResponseEntity<Void> deleteExerciseReportBy(@RequestParam int id) {
         boolean isDelete = exerciseService.deleteExerciseReport(id);
         return isDelete ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/ocr")
+    public ResponseEntity<String> getOcrResult(@ModelAttribute OcrDto ocrDto) {
+
+
+        return new ResponseEntity<>(ocrService.getOcrResult(ocrDto), HttpStatus.OK);
     }
 }

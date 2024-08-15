@@ -72,38 +72,16 @@ export const fetchBodyData = async (uid, year, month) => {
 export const uploadOCR = async (imageFile) => {
   const formData = new FormData();
 
-  const message = {
-    version: "V1",
-    requestId: "string",
-    timestamp: new Date().getTime(),
-    lang: "ko",
-    images: [
-      {
-        format: "png",
-        name: "medium",
-        templateIds: [],
-      },
-    ],
-  };
-
-  formData.append("message", JSON.stringify(message));
-  formData.append("file", imageFile);
+  formData.append("image", imageFile);
   console.log("인바디 파싱중");
-  console.log(OCR_URL);
 
-  try {
-    const response = await axios.post(OCR_URL, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "X-OCR-SECRET": secret_key,
-      },
-    });
-    console.log(response);
-    console.log("인바디 파싱성공", response.data);
-    return response.data;
-  } catch (error) {
-    throw error.response
-      ? error.response.data
-      : new Error("인바디 파싱실패", "알 수 없는  발생:", error);
-  }
+  const response = await axios.post(`${BASE_URL}/exercise/ocr`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    withCredentials: true,
+  });
+
+  console.log(response);
+  return JSON.stringify(response);
 };
