@@ -194,7 +194,7 @@ const ChatComponent = ({ participantName, roomName, receiver }) => {
                 ))}
                 <div ref={messagesEndRef} /> {/* 스크롤을 위한 빈 div 추가 */}
             </div>
-                <form onSubmit={handleChatSubmit} className="w-[300px] m-auto flex fixed bottom-[70px] h-[50px] item-center justify-center ml-[70px]">
+                <form onSubmit={handleChatSubmit} className="w-[290px] m-auto flex fixed bottom-[76px] h-[50px] item-center justify-center ml-[70px]">
                     <input
                         type="text"
                         value={chatInput}
