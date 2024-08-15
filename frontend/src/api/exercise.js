@@ -109,8 +109,15 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
       "Content-Type": "multipart/form-data",
     },
   });
-
-  return res.data;
+  const data = res.data;
+  const uint16Array = new Uint16Array(data);
+  for (let i = 0; i < data.length; i++) {
+    uint16Array[i] = data.charCodeAt(i);
+  }
+  const arrayBuffer = uint16Array.buffer;
+  const blob = new Blob([arrayBuffer], { type: "application/octet-stream" });
+  const file = new File([blob], "video.mp4", { type: blob.type });
+  return file;
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
