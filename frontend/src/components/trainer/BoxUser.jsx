@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import SelectedDate from './../common/SelectedDate';
+import TrainerSelectedDate from './../common/TrainerSelectedDate';
 
 
 const ChatListContainer = styled.div`
@@ -50,7 +50,7 @@ const BoxUser = ({ userData ,selectedDate,setSelectedDate }) => {
             {userData.name}
           </UserName>
        
-          <SelectedDate    selectedDate={selectedDate}
+          <TrainerSelectedDate    selectedDate={selectedDate}
       setSelectedDate={setSelectedDate}/>
         </UserInfo>
       </ChatItem>

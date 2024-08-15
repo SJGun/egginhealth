@@ -93,7 +93,7 @@ const InputContent = styled.div`
 
 
 
-const AddExerciseModal = ({ isOpen, onClose, selectedDate, userData, setId,fetchExData }) => {
+const AddExerciseModal = ({ isOpen, onClose, selectedDate, userData, setId,fetchExData,setExData }) => {
   const [exhSet, setExhSet] = useState('');
   const [exhWeight, setExhWeight] = useState('');
   const [exhName, setExhName] = useState('');
@@ -119,7 +119,7 @@ const AddExerciseModal = ({ isOpen, onClose, selectedDate, userData, setId,fetch
   
   const handleAddExercise = async () => {
     if (setId){
-      await updateEx(
+      const response = await updateEx(
         setId, 
         inputType === 'setWeight' ? exhSet : null,
         inputType === 'setWeight' ? exhWeight : null,
@@ -127,6 +127,8 @@ const AddExerciseModal = ({ isOpen, onClose, selectedDate, userData, setId,fetch
         inputType === 'time' ? exTime : 0,
         selectedDate
       );
+      console.log(response);
+      
     }
     else{
       await registerExh(
