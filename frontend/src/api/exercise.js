@@ -109,11 +109,9 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log(res.data);
-  const data = res.data;
+  console.log(res);
 
-  const blob = new Blob([data], { type: "video/mp4" });
-  const file = new File([blob], "video.mp4", { type: blob.type });
+  const file = new File([res.data], "video.mp4", { type: res.data.type });
   return file;
 };
 
