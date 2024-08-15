@@ -23,14 +23,14 @@ const TrainerMain = () => {
     const [isMemListEmpty, setIsMemListEmpty] = useState(false);
     const { userData, fetchData } = useUserInfoStore();
     const userId = useStore((state) => state.userId);
-    const [scheduleForModal, setscheduleForModal] = useState('')
-   
+    const now = new Date();
+    const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+    const today =new Date(now.getTime()+ kstOffset);
+    const formatMonth = `${today.getMonth() + 1}`;
+    const formatMonthforAPI = formatMonth < 10 ? `0${formatMonth}` : formatMonth;
+    const formatYear = `${today.getFullYear()}`;
+
     useEffect(() => {
-        const now = new Date();
-        const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
-        const today =new Date(now.getTime()+ kstOffset);
-        const formatMonth = `${today.getMonth() + 1}`;
-        const formatYear = `${today.getFullYear()}`;
         userUpdate();
         fetchData(userId, formatMonth, formatYear);
 
@@ -39,14 +39,9 @@ const TrainerMain = () => {
             requestPermission();
             localStorage.setItem("hasVisited", "true");
         }
-    }, [fetchData, trainer, userUpdate, userId]);
+    }, [fetchData, userUpdate, userId]);
 
-    const now = new Date();
-    const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
-    const today =new Date(now.getTime()+ kstOffset);
-    const formatMonth = `${today.getMonth() + 1}`;
-    const formatMonthforAPI = formatMonth < 10 ? `0${formatMonth}` : formatMonth;
-    const formatYear = `${today.getFullYear()}`;
+
 
     useEffect(() => {
         const fetchData = async () => {
