@@ -123,7 +123,7 @@ const hexStringToFile = async (hexString, fileName, mimeType) => {
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
-  const data = hexStringToFile(record, "video.mp4", "video/mp4");
+  const data = await hexStringToFile(record, "video.mp4", "video/mp4");
   console(data);
   const formData = new FormData();
   formData.append(`memo`, memo);
