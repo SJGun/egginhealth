@@ -3,6 +3,7 @@ import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_API_URL;
 const OCR_URL = import.meta.env.VITE_OCR_URL
 const secret_key = import.meta.env.VITE_SECRET_KEY
+
 export const checkInbodyData = async (id, year, month) => {
   try {
     const response = await axios.get(
@@ -83,6 +84,7 @@ export const uploadOCR = async (imageFile) => {
   formData.append('message', JSON.stringify(message));
   formData.append('file', imageFile);
   console.log('인바디 파싱중');
+  console.log(OCR_URL);
   
   try {
     const response = await axios.post(OCR_URL,formData, {

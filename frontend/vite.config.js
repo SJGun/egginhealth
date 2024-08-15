@@ -68,10 +68,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
+      '/clova': {
         target: 'https://we8mpmqycc.apigw.ntruss.com', // 백엔드 API의 URL
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/clova/, ''),
       },
     },
   },
