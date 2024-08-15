@@ -75,7 +75,6 @@ const Exercise = () => {
         const year = new Date(selectedDate).getFullYear();
         const month = String(new Date(selectedDate).getMonth() + 1).padStart(2, '0'); // 0부터 시작하므로 +1
         const day = String(new Date(selectedDate).getDate()).padStart(2, '0')// 일자 포맷 맞추기
-        
         const data = await getExercise(userData.id, year, month, day);
         setExData(data);        
       } catch (error) {
@@ -153,6 +152,7 @@ const Exercise = () => {
           userData={userData}
           fetchExData={fetchExData}
           setExData={setExData}
+          openAddModal={openAddModal}
         />
         <div>
           <MiniContainer>
