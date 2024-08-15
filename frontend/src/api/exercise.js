@@ -113,17 +113,19 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log("ai에서 받은 영상", res);
-  console.log("데이터 형식확인", res.data);
+
   return res.data;
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
+  const byteArray = new Uint8Array(
+    record.split("").map((char) => char.charCodeAt(0))
+  );
+  const blob = new Blob([byteArray], { type: "video/mp4" });
   const formData = new FormData();
-  console.log("받은 영상", record);
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
-  formData.append(`record`, record);
+  formData.append(`record`, blob);
   formData.append(`createdAt`, createdAt);
   const res = await axios.post(`${BASE_URL}/feedback`, formData, {
     headers: {
