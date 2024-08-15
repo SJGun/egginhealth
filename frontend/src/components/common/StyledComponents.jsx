@@ -68,7 +68,6 @@ const DietSectionContainer = styled.div`
 const DietImage = styled.img`
   max-width: 100%;
   height: auto;
-  margin-bottom: 20px;
   background-color: white;
 `;
 
@@ -192,6 +191,7 @@ const CommentIcon = styled(HiChevronRight )`
 `;
 
 const AddButton = styled.div`
+    margin-left: 300px;
     width: 35px; /* 버튼의 너비 */
     height: 35px; /* 버튼의 높이 */
     background-color: #ffeb3b; /* 버튼 배경 색상 (노란색) */
@@ -235,21 +235,30 @@ const MiniPointer = styled.div`
   width: 100px;
   height: 50px;
   background-color: #FFD66B;
-  color:white;
+  color: white;
   display: flex;
   border-radius: 10px;
   align-items: center;
   justify-content: center;
-  font-size : 16px;
+  font-size: 16px;
   cursor: pointer;
-  &: hover{
-    background-color : #FFEEB0;
+  &:hover {
+    background-color: #FFEEB0;
   }
-  `
-  const MiniPointerContainer = styled.div`
-    margin-left: 65%;
-  `
+`;
 
+const MiniPointerContainer = styled.div`
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;
+  width: 100%;
+`;
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px; 
+  justify-content: center;
+  margin-top: 20px; 
+`;
 export {
   PageContainer,
   Title,
@@ -275,5 +284,6 @@ export {
   Mini,
   MiniContainer,
   MiniPointer,
-  MiniPointerContainer
+  MiniPointerContainer,
+  ButtonWrapper
 };
