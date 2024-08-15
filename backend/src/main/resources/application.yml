@@ -68,7 +68,8 @@ server:
       protocol-header: X-Forwarded-Proto
       remote-ip-header: X-Forwarded-For
     use-relative-redirects: true
-  max-http-request-header-size: 100MB
+    max-http-form-post-size: 100MB
+    max-http-request-header-size: 100MB
 
 # LiveKit configuration
 livekit:
