@@ -5,6 +5,7 @@ import ButtonCapture from '../button/ButtonCapture';
 import { uploadOCR } from '../../../api/inbody';
 import { useStore } from '../../../store/store';
 import { getInbodyParsingResult } from '../../../hooks/inbodyParsing';
+import eggImg from '../../../assets/egg.gif'; // 스피너 이미지 파일 경로
 
 const StyledModal = styled(Modal)`
   display: flex;
@@ -34,7 +35,6 @@ const ModalContent = styled.div`
   align-items: center;
   justify-content: center;
   justify-content: flex-start; 
-
 `;
 
 const VideoContainer = styled.div`
@@ -66,16 +66,38 @@ const ButtonContainer = styled.div`
   bottom: 20px;
   display: flex;
   width: 100%;
-  top: 530px;
   justify-content: center;
   gap: 10px;
-  margin-top: auto; 
-  margin-bottom: 280px; 
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const LoadingSpinner = styled.img`
+  margin-bottom: 10px;
+`;
+
+const LoadingText = styled.p`
+  color: white;
+  font-size: 18px;
+  margin: 0;
 `;
 
 const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
   const [stream, setStream] = useState(null);
   const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(false); // 로딩 상태를 위한 상태 변수
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const { userId } = useStore(state => ({ userId: state.userId }));
@@ -126,6 +148,7 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
   };
 
   const uploadPhoto = async (dataUrl) => {
+    setLoading(true); // 업로드 시작 시 로딩 상태 활성화
     try {
       const file = dataURLtoFile(dataUrl, 'captured-photo.png');
       const ocrResult = await uploadOCR(file);
@@ -136,11 +159,12 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
       formatData.imageFile = file;
       formatData.height = '0';
 
-
-      setInbodyData(formatData);
+      await setInbodyData(formatData);
       closePhotoModal();
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false); // 데이터 처리가 끝나면 로딩 상태 비활성화
     }
   };
 
@@ -164,19 +188,23 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
       isOpen={isOpen}
       onRequestClose={closePhotoModal}
       ariaHideApp={false}
-      shouldCloseOnOverlayClick={true} 
+      shouldCloseOnOverlayClick={true}
     >
       <ModalContent>
         <VideoContainer>
           {photo ? (
-            <>
-              <ResultImage src={photo} alt="Captured Photo" />
-            </>
+            <ResultImage src={photo} alt="Captured Photo" />
           ) : (
             <StyledVideo ref={videoRef} autoPlay />
           )}
           <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
         </VideoContainer>
+        {loading && (
+          <LoadingOverlay>
+            <LoadingSpinner src={eggImg} alt="Loading..." />
+            <LoadingText>인바디 파싱중...</LoadingText>
+          </LoadingOverlay>
+        )}
         <ButtonContainer>
           <ButtonCapture onClick={capturePhoto} />
         </ButtonContainer>
