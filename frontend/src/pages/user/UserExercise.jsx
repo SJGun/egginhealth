@@ -11,9 +11,10 @@ import {
   MiniPointer,
   PageContainer,
   MiniPointerContainer
-} from "../../components/common/StyledComponents"; // 이미지 프리뷰 스타일 컴포넌트
+} from "../../components/common/StyledComponents";
 import { useNavigate } from "react-router-dom";
-import RegisterButton from "./../../components/common/button/RegisterButton";
+import RegisterButtonContainer from "../../components/common/button/RegisterButtonContainer"; // 수정 버튼
+import RegisterBox from "../../components/common/button/RegisterBox"; // 등록 버튼
 import { useStore, useTimeStore, useUserInfoStore } from "./../../store/store";
 import { getExercise } from "./../../api/exercise";
 import { ExerciseImg } from "./../../components/user/exercise/ExerciseImg";
@@ -21,16 +22,21 @@ import BoxUser from "../../components/trainer/BoxUser";
 import NoImg from "../../components/user/Noimage";
 import ModalDeleteExImg from "../../components/user/exercise/ModalDeleteExImg";
 import styled from "styled-components";
-
+import ButtonDelete from '../../components/common/button/ButtonDelete';
 const FeedbackContainer = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
+
+const Block = styled.div`
+  height: 50px;
+`;
+
 const Exercise = () => {
-  const {selectedDate,setSelectedDate } = useTimeStore()
+  const { selectedDate, setSelectedDate } = useTimeStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false); 
+  const closeModal = () => setIsModalOpen(false);
   const [exData, setExData] = useState([]);
   const [hasImages, setHasImages] = useState(false); // 이미지 유무 상태 추가
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -38,7 +44,6 @@ const Exercise = () => {
   const userType = useStore((set) => set.userType);
   const userLoginId = useStore((set) => set.userId);
   const userLoginData = useStore((set) => set.userInfo);
-
 
   const getKoreanISOString = () => {
     const now = new Date();
@@ -51,19 +56,17 @@ const Exercise = () => {
   const fetchExData = async () => {
     if (selectedDate && userData && userData.id) {
       try {
-        // selectedDate가 Date 객체일 경우
-        const year = selectedDate.getFullYear();
-        const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // 0부터 시작하므로 +1
-        const day = String(selectedDate.getDate()).padStart(2, '0'); // 일자 포맷 맞추기
-  
+        const year = new Date(selectedDate).getFullYear();
+        const month = String(new Date(selectedDate).getMonth() + 1).padStart(2, '0'); // 0부터 시작하므로 +1
+        const day = String(new Date(selectedDate).getDate()).padStart(2, '0'); // 일자 포맷 맞추기
+        
         const data = await getExercise(userData.id, year, month, day);
-        setExData(data);
+        setExData(data);        
       } catch (error) {
         console.error("운동 조회 실패", error);
       }
     }
   };
-  
   
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -72,7 +75,7 @@ const Exercise = () => {
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
-  
+
   useEffect(() => {
     if (userData && userData.id) {
       fetchExData();
@@ -82,9 +85,7 @@ const Exercise = () => {
       userData,
       isModalOpen,
       isDeleteModalOpen,
-
-    exData
-  ]);
+      exData]);
 
   const navigate = useNavigate();
 
@@ -93,36 +94,36 @@ const Exercise = () => {
   };
 
   return (
-    
     <PageContainer>
-    <div>
-      {userType === "TRAINER" ? (
-        <div>
-
-        <BoxUser
-          userData={userData}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          /> 
-          <MiniPointerContainer>
-          <MiniPointer onClick={handleFeedbackClick}>피드백 목록</MiniPointer>
-          </MiniPointerContainer>
+      <div>
+        
+        {userType === "TRAINER" ? (
+          <div>
+            <BoxUser
+              userData={userData}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            /> 
+            <MiniPointerContainer />
           </div>
         ) : (
           <FeedbackContainer>
-          <SelectedDate
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-          />
+            <SelectedDate
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
+          </FeedbackContainer>
+        )}
+          <MiniPointerContainer>
             <MiniPointer onClick={handleFeedbackClick}>피드백 목록</MiniPointer>
-        </FeedbackContainer>
-      )}
+          </MiniPointerContainer>
         <ExerciseList
           selectedDate={selectedDate}
           exData={exData}
           userLoginData={userLoginData}
           userData={userData}
           fetchExData={fetchExData}
+          setExData={setExData}
         />
         <div>
           <MiniContainer>
@@ -135,12 +136,14 @@ const Exercise = () => {
           />
           {userType === "MEMBER" ? (
             selectedDate <= getKoreanISOString() ? (
-              <RegisterButton
-                openModal={openModal}
-                setHasImages={setHasImages}
-                hasImages={hasImages}
-                onDelete={openDeleteModal}
-              />
+              hasImages ? (
+                <ButtonWrapper>
+                <RegisterButtonContainer onClick={openModal} />
+                <ButtonDelete onClick={openDeleteModal} />
+                </ButtonWrapper>
+              ) : (
+                <RegisterBox onClick={openModal} />
+              )
             ) : null
           ) : !hasImages ? (
             <NoImg />
@@ -156,7 +159,7 @@ const Exercise = () => {
           )}
           {isDeleteModalOpen && (
             <ModalDeleteExImg
-            exData={exData}
+              exData={exData}
               onClose={closeDeleteModal}
               // 삭제 핸들러 추가
             />
@@ -170,9 +173,15 @@ const Exercise = () => {
           userId={userLoginId}
           userData={userData}
         />
+        <Block />
       </div>
     </PageContainer>
   );
 };
 
 export default Exercise;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;

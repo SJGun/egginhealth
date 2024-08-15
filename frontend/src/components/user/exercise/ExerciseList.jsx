@@ -67,6 +67,7 @@ const ExerciseList = ({
   userLoginData,
   userData,
   fetchExData,
+  setExData
 }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isActionModalOpen, setIsActionModalOpen] = useState(false);
@@ -125,6 +126,18 @@ const ExerciseList = ({
     <div>
       {selectedDate && exData && exData.sets && exData.sets.length > 0 ? (
         <div>
+      {selectedDate >= today && userLoginData.type === "TRAINER" ? (
+            <AddButton onClick={openAddModal}>+</AddButton>
+          ) : null}
+          <AddExerciseModal
+            isOpen={isAddModalOpen}
+            onClose={closeAddModal}
+            selectedDate={selectedDate}
+            userData={userData}
+            setId={selectedExercise?.setId}
+            fetchExData={fetchExData}
+            setExData={setExData}
+          />
           {exData.sets
             .filter((set) => set.time > 0)
             .map((set, index) => (
@@ -156,18 +169,7 @@ const ExerciseList = ({
       )}
       {userLoginData.type === "TRAINER" ? (
         <ButtonContainer>
-          {selectedDate >= today && userLoginData.type === "TRAINER" ? (
-            <AddButton onClick={openAddModal}>+</AddButton>
-          ) : null}
-  
-          <AddExerciseModal
-            isOpen={isAddModalOpen}
-            onClose={closeAddModal}
-            selectedDate={selectedDate}
-            userData={userData}
-            setId={selectedExercise?.setId}
-            fetchExData={fetchExData}
-          />
+
   
           <ActionModal
             isOpen={isActionModalOpen}
