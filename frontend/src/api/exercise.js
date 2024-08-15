@@ -109,16 +109,13 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  const base64String = res.data;
 
-  const byteCharacters = atob(base64String);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
+  console.log(res.data);
+  const encoder = new TextEncoder();
+  const byteArray = encoder.encode(res.data);
+  console.log(byteArray);
 
-  // Create a Blob and File from the byte array
+  // Blob 및 File 객체 생성
   const blob = new Blob([byteArray], { type: "video/mp4" });
   const file = new File([blob], "video.mp4", { type: "video/mp4" });
   return file;
