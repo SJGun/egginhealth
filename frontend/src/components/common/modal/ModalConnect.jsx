@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import styled from 'styled-components';
 import { connectCode } from '../../../api/main';
 import { useUserInfoStore,useStore } from '../../../store/store';
+import { useNavigate } from 'react-router-dom';
 
 
 const StyledModal = styled(Modal)`
@@ -47,6 +48,7 @@ const ModalConnect = ({ isOpen, onRequestClose }) => {
   const [authCode, setAuthCode] = useState('');
   const { fetchData } = useUserInfoStore();
   const userId = useStore((state)=>state.userId)
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setAuthCode(event.target.value); 
@@ -54,19 +56,25 @@ const ModalConnect = ({ isOpen, onRequestClose }) => {
 
   const handleConnect = async () => {
     try {
-      const response = await connectCode(authCode); 
+      const response = await connectCode(authCode);
       console.log(response);
       if (response && response.data) {
-        const formatMonth = new Date().getMonth() + 1; 
-        const formatYear = new Date().getFullYear(); 
+        const formatMonth = new Date().getMonth() + 1;
+        const formatYear = new Date().getFullYear();
 
         await fetchData(userId, formatMonth, formatYear);
       }
-      onRequestClose(); 
+      onRequestClose();
     } catch (error) {
       console.error("연결 중 오류 발생:", error);
     }
-    await fetchData(userId)
+
+    await fetchData(userId);
+
+    // 현재 경로가 /userchat이면 /usermain으로 이동
+    if (window.location.pathname === '/userchatroom') {
+      navigate('/usermain');
+    }
   };
 
   return (
