@@ -33,8 +33,6 @@ const ModalContent = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  justify-content: flex-start; 
-
 `;
 
 const VideoContainer = styled.div`
@@ -63,14 +61,11 @@ const ResultImage = styled.img`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  bottom: 20px;
+  bottom: 20px;  /* 화면 하단에 버튼이 고정되도록 설정 */
   display: flex;
   width: 100%;
-  top: 530px;
   justify-content: center;
   gap: 10px;
-  margin-top: auto; 
-  margin-bottom: 280px; 
 `;
 
 const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
@@ -92,7 +87,11 @@ const PhotoCaptureModal = ({ isOpen, closePhotoModal, setInbodyData }) => {
 
   const startCamera = async () => {
     try {
-      const userStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const userStream = await navigator.mediaDevices.getUserMedia({ 
+        video: {
+          facingMode: { ideal: "environment" } // 후면 카메라 사용
+        }
+      });
       setStream(userStream);
       if (videoRef.current) {
         videoRef.current.srcObject = userStream;

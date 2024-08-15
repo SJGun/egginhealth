@@ -12,27 +12,26 @@ import { ModalAddSchedule } from "../../components/trainer/ModalAddSchedule.jsx"
 import { checkMemberList } from "../../api/trainer.js";
 import { requestPermission } from "../../firebase.jsx";
 
-
-
-
 const TrainerMain = () => {
     const { userUpdate } = useStore();
     const [isExpanded, setIsExpanded] = useState(false);
     const [mouseStartY, setMouseStartY] = useState(null);
     const [selectedMemDate, setSelectedMemDate] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedSchedule, setSelectedSchedule] = useState(null); // 선택된 스케줄 상태
     const [isAddOpen, setisAddOpen] = useState(false);
     const [isMemListEmpty, setIsMemListEmpty] = useState(false);
     const { userData, fetchData } = useUserInfoStore();
-    const trainer = userData?.trId;
     const userId = useStore((state) => state.userId);
+
+    // 날짜 관련 변수들을 useEffect 외부에서 선언
+    const today = new Date();
+    const formatMonth = `${today.getMonth() + 1}`;
+    const formatMonthforAPI = formatMonth < 10 ? `0${formatMonth}` : formatMonth;
+    const formatYear = `${today.getFullYear()}`;
    
     useEffect(() => {
-        const today = new Date();
-        const formatMonth = `${today.getMonth() + 1}`;
-        const formatYear = `${today.getFullYear()}`;
         userUpdate();
-
         fetchData(userId, formatMonth, formatYear);
 
         const hasVisited = localStorage.getItem("hasVisited");
@@ -40,36 +39,28 @@ const TrainerMain = () => {
             requestPermission();
             localStorage.setItem("hasVisited", "true");
         }
-    }, [fetchData, trainer, userUpdate, userId]);
-
-    const today = new Date();
-    const formatMonth = `${today.getMonth() + 1}`;
-    const formatMonthforAPI = formatMonth < 10 ? `0${formatMonth}` : formatMonth;
-    const formatYear = `${today.getFullYear()}`;
+    }, [fetchData, userUpdate, userId]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const memberList = await checkMemberList();
-        // 멤버 리스트가 비어있는지 확인
-        if (memberList && memberList.length > 0) {
-          setIsMemListEmpty(false);
-        } else {
-          setIsMemListEmpty(true);
-        }
+                if (memberList && memberList.length > 0) {
+                    setIsMemListEmpty(false);
+                } else {
+                    setIsMemListEmpty(true);
+                }
 
-        const hasVisited = localStorage.getItem('hasVisited');
-          if (!hasVisited) {
-            requestPermission();
-            // 방문 기록 저장
-            localStorage.setItem('hasVisited', 'true');
-          }
-
-      } catch (error) {
-        console.error('Error fetching member list:', error);
-        setIsMemListEmpty(true); // 에러가 발생한 경우에도 비어있다고 간주
-      }
-    };
+                const hasVisited = localStorage.getItem('hasVisited');
+                if (!hasVisited) {
+                    requestPermission();
+                    localStorage.setItem('hasVisited', 'true');
+                }
+            } catch (error) {
+                console.error('Error fetching member list:', error);
+                setIsMemListEmpty(true); // 에러가 발생한 경우에도 비어있다고 간주
+            }
+        };
 
         fetchData();
     }, []);
@@ -86,12 +77,10 @@ const TrainerMain = () => {
         if (mouseStartY !== null) {
             const mouseEndY = e.clientY;
             if (mouseStartY - mouseEndY > 50) {
-                // Upward drag
-                setIsExpanded(false);
+                setIsExpanded(false); // Upward drag
             }
             if (mouseStartY - mouseEndY < -50) {
-                // Downward drag
-                setIsExpanded(true);
+                setIsExpanded(true); // Downward drag
             }
             setMouseStartY(null);
         }
@@ -101,12 +90,10 @@ const TrainerMain = () => {
         if (mouseStartY !== null) {
             const mouseEndY = e.changedTouches[0].clientY;
             if (mouseStartY - mouseEndY > 50) {
-                // Upward drag
-                setIsExpanded(false);
+                setIsExpanded(false); // Upward drag
             }
             if (mouseStartY - mouseEndY < -50) {
-                // Downward drag
-                setIsExpanded(true);
+                setIsExpanded(true); // Downward drag
             }
             setMouseStartY(null);
         }
@@ -116,13 +103,15 @@ const TrainerMain = () => {
         setSelectedMemDate(memDateForTheDay);
     };
     
-    const openModal = () => {
-        setIsOpen(true);
+    const openModal = (schedule) => {
+        setSelectedSchedule(schedule); // 클릭된 스케줄을 상태로 저장
+        setIsOpen(true); // 모달 열기
     };
 
     const closeModal = () => {
         setIsOpen(false);
     };
+
     const openAddModal = () => {
         setisAddOpen(true);
     };
@@ -180,21 +169,26 @@ const TrainerMain = () => {
                         <ModalAddSchedule isOpen={isAddOpen} onRequestClose={closeAddModal} setSelectedMemDate={setSelectedMemDate} />
                     </div>
                     <div className='flex flex-col items-center justify-center mt-[20px]'>
-    {isMemListEmpty ? (
-        <BtnRegister />
-    ) : selectedMemDate !== null &&
-      selectedMemDate.length !== 0 &&
-      Array.isArray(selectedMemDate) ? (
-        selectedMemDate.map((schedule, index) => (
-            <div key={index} className="w-full mb-[10px]">
-                <BoxSchedule onClick={openModal} userSchedule={schedule} />
-                <ModalEditSchedule isOpen={isOpen} onRequestClose={closeModal} user={schedule} setSelectedMemDate={setSelectedMemDate} />
-            </div>
-        ))
-    ) : (
-        <BtnAddSchedule />
-    )}
-</div>
+                        {isMemListEmpty ? (
+                            <BtnRegister />
+                        ) : selectedMemDate !== null &&
+                          selectedMemDate.length !== 0 &&
+                          Array.isArray(selectedMemDate) ? (
+                            selectedMemDate.map((schedule, index) => (
+                                <div key={index} className="w-full mb-[10px]">
+                                    <BoxSchedule onClick={() => openModal(schedule)} userSchedule={schedule} />
+                                    <ModalEditSchedule 
+                                        isOpen={isOpen} 
+                                        onRequestClose={closeModal} 
+                                        user={selectedSchedule} // 현재 선택된 스케줄 전달
+                                        setSelectedMemDate={setSelectedMemDate} 
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <BtnAddSchedule />
+                        )}
+                    </div>
                 </>
             )}
         </div>
