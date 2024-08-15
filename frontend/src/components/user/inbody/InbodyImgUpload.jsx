@@ -64,7 +64,7 @@ const ImageUpload = ({ setInbodyData }) => {
       try {
         let formatData;
         const ocrResult = await uploadOCR(file);
-        console.log(ocrResult);
+        console.log('인바디파싱 성공22',ocrResult);
         
         try {
           formatData = await getInbodyParsingResult(ocrResult);

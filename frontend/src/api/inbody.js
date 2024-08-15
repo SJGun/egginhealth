@@ -82,7 +82,8 @@ export const uploadOCR = async (imageFile) => {
 
   formData.append('message', JSON.stringify(message));
   formData.append('file', imageFile);
-
+  console.log('인바디 파싱중');
+  
   try {
     const response = await axios.post('https://i11c203.p.ssafy.io/clova', formData, {
       headers: {
@@ -90,8 +91,10 @@ export const uploadOCR = async (imageFile) => {
         'X-OCR-SECRET': secret_key
       },
     });
+    console.log('인바디 파싱성공');
+    
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : new Error(error,'알 수 없는 오류 발생:',error);
+    throw error.response ? error.response.data : new Error('인바디 파싱실패','알 수 없는  발생:',error);
   }
 };
