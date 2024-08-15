@@ -95,6 +95,9 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     : -1;
 
   if (mode === -1) return record;
+
+  console.log(mode);
+
   formData.append(`mode`, mode);
   formData.append(`file`, record);
   const res = await axios.post(`${AI_BASE_URL}/feedback`, formData, {
@@ -102,14 +105,30 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
       "Content-Type": "multipart/form-data",
     },
   });
+
+  console.log(res);
   return res.data;
 };
 
+const hexStringToFile = async (hexString, fileName, mimeType) => {
+  const bytes = [];
+  for (let i = 0; i < hexString.length; i += 2) {
+    bytes.push(parseInt(hexString.substr(i, 2), 16));
+  }
+  const byteArray = new Uint8Array(bytes);
+  const blob = new Blob([byteArray], { type: mimeType });
+  const file = new File([blob], fileName, { type: mimeType });
+
+  return file;
+};
+
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
+  const data = await hexStringToFile(record, "video.mp4", "video/mp4");
+  console.log(data);
   const formData = new FormData();
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
-  formData.append(`record`, record);
+  formData.append(`record`, data);
   formData.append(`createdAt`, createdAt);
   const res = await axios.post(`${BASE_URL}/feedback`, formData, {
     headers: {
