@@ -110,8 +110,16 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  console.log(res);
-  const blob = new Blob([res.data], { type: "application/octet-stream" });
+  const binaryString = decodeURIComponent(
+    res.data.replace(/\\u([0-9A-Fa-f]{4})/g, "%$1").replace(/\\/g, "%5C")
+  );
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  const blob = new Blob([bytes], { type: "video/mp4" });
   const file = new File([blob], "video.mp4", { type: "video/mp4" });
   return file;
 };
