@@ -82,16 +82,19 @@ export const uploadOCR = async (imageFile) => {
 
   formData.append('message', JSON.stringify(message));
   formData.append('file', imageFile);
-
+  console.log('인바디 파싱중');
+  
   try {
-    const response = await axios.post(OCR_URL, formData, {
+    const response = await axios.post(OCR_URL,formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'X-OCR-SECRET': secret_key
       },
     });
+    console.log('인바디 파싱성공');
+    
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : new Error(error,'알 수 없는 오류 발생:',error);
+    throw error.response ? error.response.data : new Error('인바디 파싱실패','알 수 없는  발생:',error);
   }
 };
