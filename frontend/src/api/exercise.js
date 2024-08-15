@@ -106,7 +106,7 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  const hexString = await res.data.text();
+  const hexString = res.data;
   console.log(hexString);
 
   const bytes = [];
