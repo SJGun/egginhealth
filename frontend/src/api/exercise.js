@@ -111,6 +111,7 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
   });
 
   console.log(res.data);
+  console.log(res);
   const encoder = new TextEncoder();
   const byteArray = encoder.encode(res.data);
   console.log(byteArray);
@@ -118,6 +119,7 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
   // Blob 및 File 객체 생성
   const blob = new Blob([byteArray], { type: "video/mp4" });
   const file = new File([blob], "video.mp4", { type: "video/mp4" });
+  console.log(file.size);
   return file;
 };
 
