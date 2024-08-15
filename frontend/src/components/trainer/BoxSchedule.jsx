@@ -42,7 +42,7 @@ const ArrowImage = styled.img`
 
 const BoxSchedule = ({ onClick,userSchedule }) => {
   return (
-    <Container onClick={onClick}>
+    <Container onClick={()=>onClick(userSchedule)}>
       <UserImage src={userSchedule.imgUrl||profileImg} alt="Profile" />
       <UserName>{userSchedule.name}</UserName>
       <TimeSlot>{userSchedule.startTime.substring(11, 16)} - {userSchedule.endTime.substring(11, 16)}</TimeSlot>
