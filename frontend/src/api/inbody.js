@@ -73,7 +73,6 @@ export const uploadOCR = async (imageFile) => {
   const formData = new FormData();
 
   formData.append("image", imageFile);
-  console.log("인바디 파싱중");
 
   const response = await axios.post(`${BASE_URL}/exercise/ocr`, formData, {
     headers: {
@@ -83,7 +82,5 @@ export const uploadOCR = async (imageFile) => {
   });
 
   const data = JSON.parse(JSON.stringify(response.data));
-  console.log(response.data);
-  console.log(typeof response.data);
   return data;
 };
