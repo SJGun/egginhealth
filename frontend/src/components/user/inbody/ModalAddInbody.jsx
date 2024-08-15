@@ -1,18 +1,18 @@
 // components/common/modal/ModalAddInbody.js
-import React, { useState } from 'react';
-import Modal from 'react-modal';
-import styled from 'styled-components';
-import ButtonCamera from '../../../components/common/button/ButtonCamera';
-import PhotoCaptureModal from '../../../components/common/modal/ModalPhotoCapture';
-import ImageUpload from './InbodyImgUpload'
-import { uploadInbodyData } from '../../../api/inbody';
-import { useStore } from '../../../store/store';
+import React, { useState } from "react";
+import Modal from "react-modal";
+import styled from "styled-components";
+import ButtonCamera from "../../../components/common/button/ButtonCamera";
+import PhotoCaptureModal from "../../../components/common/modal/ModalPhotoCapture";
+import ImageUpload from "./InbodyImgUpload";
+import { uploadInbodyData } from "../../../api/inbody";
+import { useStore } from "../../../store/store";
 
 const StyledModal = styled(Modal)`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #F8F7F4; 
+  background-color: #f8f7f4;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   padding: 20px;
@@ -23,6 +23,7 @@ const StyledModal = styled(Modal)`
   width: 400px;
   outline: none;
   position: relative;
+  z-index: 100;
 `;
 
 const ModalContent = styled.div`
@@ -50,10 +51,10 @@ const InputField = styled.input`
   border-bottom: 1px solid #ccc;
   outline: none;
   font-size: 16px;
-  text-align: center; 
+  text-align: center;
 
   &:focus {
-    border-bottom: 1px solid #FFD66B;
+    border-bottom: 1px solid #ffd66b;
   }
 `;
 
@@ -63,7 +64,7 @@ const UnitLabel = styled.span`
 `;
 
 const RegisterButton = styled.button`
-  background-color: #FFD66B;
+  background-color: #ffd66b;
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -83,18 +84,18 @@ const CameraButtonWrapper = styled.div`
 const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
   const [photoModalIsOpen, setPhotoModalIsOpen] = useState(false);
   const [inbodyData, setInbodyData] = useState({
-    weight: '',
-    muscle: '',
-    fat: '',
-    bmi: '',
-    fatPercent: '',
-    fatPercentage: '',
-    compositionScore: '',
-    height: '',
-    imageFile: '',
-    memberId: '',
+    weight: "",
+    muscle: "",
+    fat: "",
+    bmi: "",
+    fatPercent: "",
+    fatPercentage: "",
+    compositionScore: "",
+    height: "",
+    imageFile: "",
+    memberId: "",
   });
-  const userId = useStore((state)=>state.userId)
+  const userId = useStore((state) => state.userId);
   const openPhotoModal = () => {
     setPhotoModalIsOpen(true);
   };
@@ -113,36 +114,42 @@ const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
   const handleFileSelect = (file) => {
     setInbodyData({
       ...inbodyData,
-      imageFile: file
+      imageFile: file,
     });
   };
 
   const inbodyBoxContent = [
-    { key: 'weight', label: '체중', unit: 'kg' },
-    { key: 'muscle', label: '골격근량', unit: 'kg' },
-    { key: 'fat', label: '체지방량', unit: 'kg' },
-    { key: 'bmi', label: 'BMI', unit: 'kg/㎡' },
-    { key: 'fatPercentage', label: '체지방률', unit: '%' },
-    { key: 'compositionScore', label: '종합점수', unit: '점' },
+    { key: "weight", label: "체중", unit: "kg" },
+    { key: "muscle", label: "골격근량", unit: "kg" },
+    { key: "fat", label: "체지방량", unit: "kg" },
+    { key: "bmi", label: "BMI", unit: "kg/㎡" },
+    { key: "fatPercentage", label: "체지방률", unit: "%" },
+    { key: "compositionScore", label: "종합점수", unit: "점" },
   ];
 
   const updateData = async () => {
-    inbodyData.memberId = userId
-    inbodyData.height = 0
+    inbodyData.memberId = userId;
+    inbodyData.height = 0;
     await uploadInbodyData(inbodyData);
 
-    
     await onRequestClose();
     await fetchData();
   };
 
   return (
     <>
-      <StyledModal isOpen={isOpen} onRequestClose={onRequestClose} ariaHideApp={false}>
+      <StyledModal
+        isOpen={isOpen}
+        onRequestClose={onRequestClose}
+        ariaHideApp={false}
+      >
         <ModalContent>
           <CameraButtonWrapper>
             <ButtonCamera onClick={openPhotoModal} />
-            <ImageUpload onFileSelect={handleFileSelect} setInbodyData={setInbodyData} />
+            <ImageUpload
+              onFileSelect={handleFileSelect}
+              setInbodyData={setInbodyData}
+            />
           </CameraButtonWrapper>
           <h2>검사지 등록하기</h2>
           {inbodyBoxContent.map((item, index) => (
@@ -150,7 +157,7 @@ const ModalAddInbody = ({ isOpen, onRequestClose, fetchData }) => {
               <InputLabel>{item.label}</InputLabel>
               <InputField
                 type="text"
-                value={inbodyData[item.key] || ''}
+                value={inbodyData[item.key] || ""}
                 onChange={(e) => handleInputChange(e, item.key)}
                 placeholder=" "
               />
