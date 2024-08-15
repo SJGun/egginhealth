@@ -82,6 +82,8 @@ export const uploadOCR = async (imageFile) => {
     withCredentials: true,
   });
 
-  console.log(typeof response);
-  return response.data;
+  const data = JSON.parse(JSON.stringify(response.data));
+  console.log(response.data);
+  console.log(typeof response.data);
+  return data;
 };
