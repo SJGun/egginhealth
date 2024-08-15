@@ -110,13 +110,12 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  console.log(res.data);
-  console.log(res);
-  const encoder = new TextEncoder();
-  const byteArray = encoder.encode(res.data);
-  console.log(byteArray);
+  const str = res.data;
 
-  // Blob 및 File 객체 생성
+  const byteArray = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) {
+    byteArray[i] = str.charCodeAt(i) & 0xff;
+  }
   const blob = new Blob([byteArray], { type: "video/mp4" });
   const file = new File([blob], "video.mp4", { type: "video/mp4" });
   console.log(file.size);
