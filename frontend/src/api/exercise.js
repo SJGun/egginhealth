@@ -117,19 +117,11 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  const hexString = res.data;
-  console.log(hexString);
+  const arrayBuffer = await res.data.arrayBuffer();
 
-  const bytes = [];
-  for (let i = 0; i < hexString.length; i += 2) {
-    bytes.push(parseInt(hexString.substr(i, 2), 16));
-  }
-  const byteArray = new Uint8Array(bytes);
-  const blob = new Blob([byteArray], { type: "video/mp4" });
-  const file = new File([blob], "video.mp4", { type: "video/mp4" });
+  console.log(arrayBuffer);
+  const file = new File([arrayBuffer], "video.mp4", { type: "video/mp4" });
 
-  console.log("blob 확인" + blob);
-  console.log("file확인" + file);
   return file;
 };
 
