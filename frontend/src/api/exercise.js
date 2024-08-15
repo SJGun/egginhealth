@@ -110,9 +110,12 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  const binaryString = decodeURIComponent(
-    res.data.replace(/\\u([0-9A-Fa-f]{4})/g, "%$1").replace(/\\/g, "%5C")
-  );
+  const binaryString = escapeString
+    .replace(/\\u([0-9A-Fa-f]{4})/g, (match, grp) =>
+      String.fromCharCode(parseInt(grp, 16))
+    )
+    .replace(/\\/g, ""); // Remove any remaining backslashes
+
   const len = binaryString.length;
   const bytes = new Uint8Array(len);
   for (let i = 0; i < len; i++) {

@@ -83,5 +83,5 @@ export const uploadOCR = async (imageFile) => {
   });
 
   console.log(response);
-  return JSON.stringify(response);
+  return JSON.parse(response);
 };
