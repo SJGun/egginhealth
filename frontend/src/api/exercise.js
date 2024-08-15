@@ -110,16 +110,7 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
     },
   });
 
-  const str = res.data;
-
-  const byteArray = new Uint8Array(str.length);
-  for (let i = 0; i < str.length; i++) {
-    byteArray[i] = str.charCodeAt(i) & 0xff;
-  }
-  const blob = new Blob([byteArray], { type: "video/mp4" });
-  const file = new File([blob], "video.mp4", { type: "video/mp4" });
-  console.log(file.size);
-  return file;
+  return res.data;
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
