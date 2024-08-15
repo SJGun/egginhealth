@@ -26,9 +26,12 @@ const TrainerMain = () => {
     const { userData, fetchData } = useUserInfoStore();
     const trainer = userData?.trId;
     const userId = useStore((state) => state.userId);
+    const [scheduleForModal, setscheduleForModal] = useState('')
    
     useEffect(() => {
-        const today = new Date();
+        const now = new Date();
+        const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+        const today =new Date(now.getTime()+ kstOffset);
         const formatMonth = `${today.getMonth() + 1}`;
         const formatYear = `${today.getFullYear()}`;
         userUpdate();
@@ -42,7 +45,9 @@ const TrainerMain = () => {
         }
     }, [fetchData, trainer, userUpdate, userId]);
 
-    const today = new Date();
+    const now = new Date();
+    const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+    const today =new Date(now.getTime()+ kstOffset);
     const formatMonth = `${today.getMonth() + 1}`;
     const formatMonthforAPI = formatMonth < 10 ? `0${formatMonth}` : formatMonth;
     const formatYear = `${today.getFullYear()}`;
@@ -116,7 +121,8 @@ const TrainerMain = () => {
         setSelectedMemDate(memDateForTheDay);
     };
     
-    const openModal = () => {
+    const openModal = (userSchedule) => {
+        setscheduleForModal(userSchedule)
         setIsOpen(true);
     };
 
@@ -188,7 +194,7 @@ const TrainerMain = () => {
         selectedMemDate.map((schedule, index) => (
             <div key={index} className="w-full mb-[10px]">
                 <BoxSchedule onClick={openModal} userSchedule={schedule} />
-                <ModalEditSchedule isOpen={isOpen} onRequestClose={closeModal} user={schedule} setSelectedMemDate={setSelectedMemDate} />
+                <ModalEditSchedule isOpen={isOpen} onRequestClose={closeModal} user={scheduleForModal} setSelectedMemDate={setSelectedMemDate} />
             </div>
         ))
     ) : (
