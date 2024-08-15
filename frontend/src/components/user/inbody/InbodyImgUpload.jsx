@@ -1,10 +1,10 @@
 // components/common/ImageUpload.js
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { uploadOCR } from '../../../api/inbody';
 import { getInbodyParsingResult } from '../../../hooks/inbodyParsing';
 import { MdOutlineInsertPhoto } from "react-icons/md";
-
+import eggImg from '../../../assets/egg.gif'; // GIF 파일 경로
 
 const UploadButton = styled.label`
   background-color: #FFD66B;
@@ -28,20 +28,49 @@ const StyledIcon = styled(MdOutlineInsertPhoto)`
   color: white;   
 `;
 
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const LoadingSpinner = styled.img`
+  margin-bottom: 10px;
+`;
+
+const LoadingText = styled.p`
+  color: white;
+  font-size: 18px;
+  margin: 0;
+`;
+
 const ImageUpload = ({ setInbodyData }) => {
+  const [loading, setLoading] = useState(false); // 로딩 상태를 위한 상태 변수
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      setLoading(true); // 파일 선택 시 로딩 상태 활성화
       try {
         const ocrResult = await uploadOCR(file);
 
-        const formatData = getInbodyParsingResult(ocrResult);
+        const formatData = await getInbodyParsingResult(ocrResult);
         formatData.imageFile = file;
         formatData.height = '0'; 
 
-        setInbodyData(formatData);
+        await setInbodyData(formatData);
       } catch (error) {
         console.error('Error uploading photo:', error);
+      } finally {
+        setLoading(false); // 데이터 처리가 끝나면 로딩 상태 비활성화
       }
     }
   };
@@ -49,9 +78,15 @@ const ImageUpload = ({ setInbodyData }) => {
   return (
     <div>
       <UploadButton>
-      <StyledIcon />
-      <HiddenFileInput type="file" accept="image/*" onChange={handleFileChange} />
+        <StyledIcon />
+        <HiddenFileInput type="file" accept="image/*" onChange={handleFileChange} />
       </UploadButton>
+      {loading && (
+        <LoadingOverlay>
+          <LoadingSpinner src={eggImg} alt="Loading..." />
+          <LoadingText>인바디 파싱중...</LoadingText>
+        </LoadingOverlay>
+      )}
     </div>
   );
 };
