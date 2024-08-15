@@ -102,38 +102,55 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
 
   if (mode === -1) return record;
 
+  // const res = await axios.post(`${AI_BASE_URL}/feedback`, formData, {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // });
+
+  // const binaryString = escapeString
+  //   .replace(/\\u([0-9A-Fa-f]{4})/g, (match, grp) =>
+  //     String.fromCharCode(parseInt(grp, 16))
+  //   )
+  //   .replace(/\\/g, ""); // Remove any remaining backslashes
+
+  // const len = binaryString.length;
+  // const bytes = new Uint8Array(len);
+  // for (let i = 0; i < len; i++) {
+  //   bytes[i] = binaryString.charCodeAt(i);
+  // }
+
+  // const blob = new Blob([bytes], { type: "video/mp4" });
+  // const file = new File([blob], "video.mp4", { type: "video/mp4" });
+  // return file;
   formData.append(`mode`, mode);
   formData.append(`file`, record);
-  const res = await axios.post(`${AI_BASE_URL}/feedback`, formData, {
+  const res = await axios.post(`${AI_BASE_URL}/video`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  const binaryString = escapeString
-    .replace(/\\u([0-9A-Fa-f]{4})/g, (match, grp) =>
-      String.fromCharCode(parseInt(grp, 16))
-    )
-    .replace(/\\/g, ""); // Remove any remaining backslashes
-
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-
-  const blob = new Blob([bytes], { type: "video/mp4" });
-  const file = new File([blob], "video.mp4", { type: "video/mp4" });
-  return file;
+  return res.data;
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
+  // const formData = new FormData();
+  // formData.append(`memo`, memo);
+  // formData.append(`exerciseName`, exerciseId);
+  // formData.append(`record`, record);
+  // formData.append(`createdAt`, createdAt);
+  // const res = await axios.post(`${BASE_URL}/feedback`, formData, {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // });
+
   const formData = new FormData();
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
-  formData.append(`record`, record);
-  formData.append(`createdAt`, createdAt);
-  const res = await axios.post(`${BASE_URL}/feedback`, formData, {
+  formData.append(`videoUrl`, record);
+  const res = await axios.post(`${BASE_URL}/feedback/url`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

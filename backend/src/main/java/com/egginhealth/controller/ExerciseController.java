@@ -62,9 +62,7 @@ public class ExerciseController {
     }
 
     @PostMapping("/ocr")
-    public ResponseEntity<String> getOcrResult(@ModelAttribute OcrDto ocrDto) {
-
-
+    public ResponseEntity<Object> getOcrResult(@ModelAttribute OcrDto ocrDto) {
         return new ResponseEntity<>(ocrService.getOcrResult(ocrDto), HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.egginhealth.controller;
 
 import com.egginhealth.data.dto.feedback.FeedbackDto;
 import com.egginhealth.data.dto.feedback.FeedbackInputDto;
+import com.egginhealth.data.dto.feedback.FeedbackInputUrlDto;
 import com.egginhealth.data.dto.feedback.FeedbackUpdateDto;
 import com.egginhealth.service.FeedbackService;
 import com.egginhealth.util.SecurityUtil;
@@ -27,6 +28,13 @@ public class FeedbackController {
     @PostMapping
     public ResponseEntity<Map<String, Integer>> register(@ModelAttribute FeedbackInputDto inputData) throws IOException {
         return new ResponseEntity<>(feedbackService.save(inputData, SecurityUtil.getUserId()), HttpStatus.CREATED);
+    }
+
+
+    @PostMapping("/url")
+    public ResponseEntity<Void> postUrl(@RequestBody FeedbackInputUrlDto inputData) {
+        feedbackService.registerFeedbackUrl(inputData);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/list/{id}")
