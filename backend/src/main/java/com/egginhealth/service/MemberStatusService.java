@@ -81,14 +81,15 @@ public class MemberStatusService {
 
     public List<MemberStatusDto> getMemberStatusList(int year, int month, int day) {
 
-        Member trainer = memberRepository.findById(SecurityUtil.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("not found Member"));
-        List<Member> members = memberRepository.findMembersWithStatus(trainer.getId(), year, month, day)
-                .orElseThrow(() -> new IllegalArgumentException("not found Member"));
+        Member trainer = memberRepository.findById(SecurityUtil.getUserId()).get();
+        List<Member> members = memberRepository.findMembersWithStatus(trainer.getId(), year, month, day).get();
+        System.out.println(SecurityUtil.getUserId() + " " + trainer.getId() + " " + year + " " + month + " " + day);
 
+        System.out.println(members.size());
         List<Integer> memberIds = members.stream()
                 .map(Member::getId)
                 .collect(Collectors.toList());
+        System.out.println(year + " " + month + " " + day);
         Map<Integer, Boolean> feedbackMap = feedbackRepository.findUnreadFeedbacksByIds(memberIds).stream().collect(Collectors.toMap(
                 Feedback::getId,
                 feedback -> !feedback.isRead()

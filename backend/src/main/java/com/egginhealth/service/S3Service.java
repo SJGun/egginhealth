@@ -84,7 +84,7 @@ public class S3Service {
         Files.delete(uploadFile.toPath());
     }
 
-    private Optional<File> convert(MultipartFile file) throws IOException {
+    public Optional<File> convert(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
 

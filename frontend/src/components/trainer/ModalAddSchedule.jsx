@@ -165,7 +165,9 @@ export const ModalAddSchedule = ({ isOpen, onRequestClose,setSelectedMemDate }) 
 
   useEffect(() => {
     if (isOpen) {
-      const now = new Date();
+      const today = new Date();
+      const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+      const now =new Date(today.getTime()+ kstOffset);
       const currentDate = now.toISOString().split('T')[0];
       const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
   

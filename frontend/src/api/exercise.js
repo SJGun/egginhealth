@@ -11,7 +11,15 @@ export const getExercise = async (uid, year, month, day) => {
   return res.data;
 };
 
-export const registerExh = async (set, weight,ref, name, time, date,memberId) => {
+export const registerExh = async (
+  set,
+  weight,
+  ref,
+  name,
+  time,
+  date,
+  memberId
+) => {
   const response = axios.post(
     `${BASE_URL}/exercise`,
     {
@@ -63,10 +71,9 @@ export const registerEximg = async (date, img) => {
 };
 
 export const deleteExImg = async (reportId) => {
-  const res = await axios.delete(`${BASE_URL}/exercise/report?id=${reportId}`)
-  return res.data
-}
-
+  const res = await axios.delete(`${BASE_URL}/exercise/report?id=${reportId}`);
+  return res.data;
+};
 
 export const updateEx = async (setId, set, ref, weight, name, time, date) => {
   const res = await axios.patch(`${BASE_URL}/exercise`, {
@@ -81,7 +88,6 @@ export const updateEx = async (setId, set, ref, weight, name, time, date) => {
   return res.data;
 };
 export const deleteEx = async (setId) => {
-  
   const res = await axios.delete(`${BASE_URL}/exercise?setId=${setId}`);
   return res.data;
 };
@@ -96,31 +102,56 @@ export const registerFeedbackToAI = async (record, exerciseName) => {
 
   if (mode === -1) return record;
 
-  console.log(mode);
+  // const res = await axios.post(`${AI_BASE_URL}/feedback`, formData, {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // });
 
+  // const binaryString = escapeString
+  //   .replace(/\\u([0-9A-Fa-f]{4})/g, (match, grp) =>
+  //     String.fromCharCode(parseInt(grp, 16))
+  //   )
+  //   .replace(/\\/g, ""); // Remove any remaining backslashes
+
+  // const len = binaryString.length;
+  // const bytes = new Uint8Array(len);
+  // for (let i = 0; i < len; i++) {
+  //   bytes[i] = binaryString.charCodeAt(i);
+  // }
+
+  // const blob = new Blob([bytes], { type: "video/mp4" });
+  // const file = new File([blob], "video.mp4", { type: "video/mp4" });
+  // return file;
   formData.append(`mode`, mode);
   formData.append(`file`, record);
-  const res = await axios.post(`${AI_BASE_URL}/feedback`, formData, {
+  const res = await axios.post(`${AI_BASE_URL}/video`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  const arrayBuffer = await res.data.arrayBuffer();
-
-  console.log(arrayBuffer);
-  const file = new File([arrayBuffer], "video.mp4", { type: "video/mp4" });
-
-  return file;
+  return res.data;
 };
 
 export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
+  // const formData = new FormData();
+  // formData.append(`memo`, memo);
+  // formData.append(`exerciseName`, exerciseId);
+  // formData.append(`record`, record);
+  // formData.append(`createdAt`, createdAt);
+  // const res = await axios.post(`${BASE_URL}/feedback`, formData, {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // });
+
+  console.log(memo, exerciseId, record);
   const formData = new FormData();
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
-  formData.append(`record`, record);
-  formData.append(`createdAt`, createdAt);
-  const res = await axios.post(`${BASE_URL}/feedback`, formData, {
+  formData.append(`videoUrl`, record);
+  const res = await axios.post(`${BASE_URL}/feedback/url`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -157,12 +188,10 @@ export const updateFeedback = async (
   return res.data;
 };
 
-
-
-export const deleteFeedback = async (id)=>
-  {const res = await axios.delete(`${BASE_URL}/feedback/${id}`)
-return res.data
-}
+export const deleteFeedback = async (id) => {
+  const res = await axios.delete(`${BASE_URL}/feedback/${id}`);
+  return res.data;
+};
 
 export const readFeedback = async (id) => {
   const res = await axios.get(`${BASE_URL}/feedback/read/${id}`);
