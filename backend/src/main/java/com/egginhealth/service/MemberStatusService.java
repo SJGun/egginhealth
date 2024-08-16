@@ -83,6 +83,7 @@ public class MemberStatusService {
 
         Member trainer = memberRepository.findById(SecurityUtil.getUserId()).get();
         List<Member> members = memberRepository.findMembersWithStatus(trainer.getId(), year, month, day).get();
+        System.out.println(SecurityUtil.getUserId() + " " + trainer.getId() + " " + year + " " + month + " " + day);
 
         System.out.println(members.size());
         List<Integer> memberIds = members.stream()
