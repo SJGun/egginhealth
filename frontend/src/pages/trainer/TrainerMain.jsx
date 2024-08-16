@@ -44,12 +44,6 @@ const TrainerMain = () => {
         } else {
           setIsMemListEmpty(true);
         }
-
-        const hasVisited = localStorage.getItem("hasVisited");
-        if (!hasVisited) {
-          requestPermission();
-          localStorage.setItem("hasVisited", "true");
-        }
       } catch (error) {
         console.error("Error fetching member list:", error);
         setIsMemListEmpty(true); // 에러가 발생한 경우에도 비어있다고 간주
