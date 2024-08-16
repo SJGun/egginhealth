@@ -146,6 +146,7 @@ export const registerFeedback = async (memo, exerciseId, record, createdAt) => {
   //   },
   // });
 
+  console.log(memo, exerciseId, record);
   const formData = new FormData();
   formData.append(`memo`, memo);
   formData.append(`exerciseName`, exerciseId);
