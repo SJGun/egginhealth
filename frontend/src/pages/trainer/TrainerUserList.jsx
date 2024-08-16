@@ -7,7 +7,7 @@ import videoIcon from '../../assets/feedback.png';
 import arrow from '../../assets/arrow.png';
 import { checkMemberList } from '../../api/trainer';
 import { useNavigate } from 'react-router-dom';
-import { useUserInfoStore } from '../../store/store';
+import { useUserInfoStore,useStore } from '../../store/store';
 import BtnRegister from "../../components/trainer/BtnRegister.jsx";
 const Container = styled.div`
   padding: 20px;
@@ -91,6 +91,7 @@ const TrainerUserList = () => {
   const formatMonth = `${today.getMonth() + 1}`;
   const formatYear = `${today.getFullYear()}`;
   const userData = useUserInfoStore((state)=>state.userData)
+  const userId = useStore((state)=>state.userId)
 
   const handleDetailMember = async (memberId) => {
     await fetchData(memberId, formatMonth, formatYear);
@@ -98,6 +99,7 @@ const TrainerUserList = () => {
   };
 
   useEffect(() => {
+    
     const fetchMemberList = async () => {
       try {
         const response = await checkMemberList();
@@ -107,7 +109,7 @@ const TrainerUserList = () => {
       }
     };
     fetchMemberList();
-  }, [userData]);
+  }, [userData,userId]);
 
   return (
     <Container>
