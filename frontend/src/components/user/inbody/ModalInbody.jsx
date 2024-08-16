@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import styled from 'styled-components';
-import PlusBtn from '../../../assets/plusbutton.png';
-import ModalAddInbody from './ModalAddInbody';
-import PhotoCaptureModal from '../../../components/common/modal/ModalPhotoCapture';
-import { fetchBodyData } from '../../../api/inbody';
-import { useStore } from '../../../store/store';
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
+import styled from "styled-components";
+import PlusBtn from "../../../assets/plusbutton.png";
+import ModalAddInbody from "./ModalAddInbody";
+import PhotoCaptureModal from "../../../components/common/modal/ModalPhotoCapture";
+import { fetchBodyData } from "../../../api/inbody";
+import { useStore } from "../../../store/store";
 
 const StyledModal = styled(Modal)`
   display: flex;
@@ -23,6 +23,7 @@ const StyledModal = styled(Modal)`
   width: 400px;
   outline: none;
   position: relative;
+  z-index: 100;
 `;
 
 const ModalContent = styled.div`
@@ -49,7 +50,7 @@ const DropdownContainer = styled.div`
 `;
 
 const DropdownButton = styled.button`
-  background-color: #FFD66B;
+  background-color: #ffd66b;
   color: white;
   padding: 10px;
   border: none;
@@ -62,11 +63,11 @@ const DropdownButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative; 
+  position: relative;
 `;
 
 const DropdownMenu = styled.div`
-  display: ${({ open }) => (open ? 'block' : 'none')};
+  display: ${({ open }) => (open ? "block" : "none")};
   position: absolute;
   background-color: #ffffff;
   border: 1px solid #ddd;
@@ -74,7 +75,7 @@ const DropdownMenu = styled.div`
   width: 80%;
   max-height: 200px;
   overflow-y: auto;
-  z-index: 1000; 
+  z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   top: 100%;
   left: 50%;
@@ -85,7 +86,7 @@ const DropdownItem = styled.div`
   padding: 10px;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
-  
+
   &:hover {
     background-color: #f0f0f0;
   }
@@ -160,29 +161,47 @@ const ModalInbody = ({ isOpen, onRequestClose }) => {
         <ModalContent>
           {selectedPhoto && (
             <ImageContainer>
-              <img src={selectedPhoto.imageUrl} alt={`Inbody ${selectedPhoto.id}`} />
+              <img
+                src={selectedPhoto.imageUrl}
+                alt={`Inbody ${selectedPhoto.id}`}
+              />
             </ImageContainer>
           )}
-          
+
           <DropdownContainer>
             <DropdownButton onClick={() => setDropdownOpen(!dropdownOpen)}>
-              {selectedPhoto ? new Date(selectedPhoto.createdAt).toLocaleDateString() : 'Select Date'}
+              {selectedPhoto
+                ? new Date(selectedPhoto.createdAt).toLocaleDateString()
+                : "Select Date"}
               <span>&#9662;</span>
             </DropdownButton>
             <DropdownMenu open={dropdownOpen}>
-              {bodyData.map(item => (
-                <DropdownItem key={item.id} onClick={() => handleDateClick(item)}>
+              {bodyData.map((item) => (
+                <DropdownItem
+                  key={item.id}
+                  onClick={() => handleDateClick(item)}
+                >
                   {new Date(item.createdAt).toLocaleDateString()}
                 </DropdownItem>
               ))}
             </DropdownMenu>
           </DropdownContainer>
 
-          <ModalAddInbody isOpen={modalIsOpen} onRequestClose={closeModal} fetchData={fetchData} />
-          <PhotoCaptureModal isOpen={photoModalIsOpen} onRequestClose={closePhotoModal} />
+          <ModalAddInbody
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            fetchData={fetchData}
+          />
+          <PhotoCaptureModal
+            isOpen={photoModalIsOpen}
+            onRequestClose={closePhotoModal}
+          />
         </ModalContent>
       </StyledModal>
-      <PhotoCaptureModal isOpen={photoModalIsOpen} onRequestClose={closePhotoModal} />
+      <PhotoCaptureModal
+        isOpen={photoModalIsOpen}
+        onRequestClose={closePhotoModal}
+      />
     </>
   );
 };

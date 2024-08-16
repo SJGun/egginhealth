@@ -56,6 +56,7 @@ spring:
   servlet:
     multipart:
       max-file-size: 500MB
+      max-request-size: 100MB
 
 server:
   port: ${SERVER_PORT}
@@ -67,6 +68,8 @@ server:
       protocol-header: X-Forwarded-Proto
       remote-ip-header: X-Forwarded-For
     use-relative-redirects: true
+    max-http-form-post-size: 100MB
+    max-http-request-header-size: 100MB
 
 # LiveKit configuration
 livekit:

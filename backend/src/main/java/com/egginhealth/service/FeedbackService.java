@@ -1,14 +1,12 @@
 package com.egginhealth.service;
 
-import com.egginhealth.data.dto.feedback.FeedbackDto;
-import com.egginhealth.data.dto.feedback.FeedbackInputDto;
-import com.egginhealth.data.dto.feedback.FeedbackSetDto;
-import com.egginhealth.data.dto.feedback.FeedbackUpdateDto;
+import com.egginhealth.data.dto.feedback.*;
 import com.egginhealth.data.entity.Feedback;
 import com.egginhealth.data.entity.Member;
 import com.egginhealth.data.repository.FeedbackRepository;
 import com.egginhealth.data.repository.MemberRepository;
 import com.egginhealth.util.DateTimeUtil;
+import com.egginhealth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +68,19 @@ public class FeedbackService {
 
         FeedbackSetDto feedbackSetDto = FeedbackSetDto.from(feedbackUpdateDto, dateTime, url);
         feedback.updateFeedbackBy(feedbackSetDto);
+    }
+
+    public void registerFeedbackUrl(FeedbackInputUrlDto feedbackInputDto) {
+        Member member = memberRepository.findById(SecurityUtil.getUserId())
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        Feedback feedback = Feedback.builder()
+                .videoUrl(feedbackInputDto.videoUrl())
+                .memo(feedbackInputDto.memo())
+                .exerciseName(feedbackInputDto.exerciseName())
+                .member(member)
+                .createdAt(LocalDateTime.now())
+                .build();
+        feedbackRepository.save(feedback);
     }
 
     public boolean deleteFeedback(int id) {
